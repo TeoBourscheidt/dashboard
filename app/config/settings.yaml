@@ -1,0 +1,4 @@
+refresh_interval: 300   # seconds
+default_assets:
+  - AAPL
+  - BTC-USD
