@@ -1,4 +1,5 @@
 import yfinance as yf
+<<<<<<< HEAD
 from typing import Annotated
 import pandas as pd
 
@@ -35,3 +36,15 @@ def fetch_price(ticker: str, period: str = "1y") -> pd.DataFrame:
         df.rename(columns={'date': 'timestamp'}, inplace=True)
     
     return df
+=======
+import pandas as pd
+
+def fetch_price(asset):
+    try:
+        df = yf.download(asset, period="6mo", interval="1h")
+        df = df.rename(columns={"Close": "close"})
+        return df
+    except Exception as e:
+        print("API Error:", e)
+        return None
+>>>>>>> abb6cc5e012c98596279a8c6b8fa9bc398220d25
