@@ -1,32 +1,60 @@
 import numpy as np
+import pandas as pd
 
-def max_drawdown(series: np.ndarray) -> float:
-    """
-    Maximum drawdown d'une série de valeur cumulée.
-    """
-    cum_max = np.maximum.accumulate(series)
-    drawdown = (series - cum_max) / cum_max
-    return drawdown.min()
+def portfolio_return(data : pd.DataFrame) -> pd.DataFrame:
+    #data["Return"]=( data["Portefeuille"]-data["Portefeuille"].shift(1) ) / data["Portefeuille"].shift(1)
+    data["Return"]=data["Portefeuille"].pct_change()
+    return data
 
-def cumulative_return(series: np.ndarray) -> float:
-    """
-    Rendement cumulatif total.
-    """
-    return series[-1] / series[0] - 1
+def max_drawdown(data: pd.DataFrame) -> float:
+    portfolio = data["Portefeuille"]
 
-def volatility(returns: np.ndarray, freq: int = 252) -> float:
-    """
-    Volatilité annualisée des rendements.
-    
-    freq : nombre de périodes par an (252 pour daily, 12 pour monthly)
-    """
-    return np.std(returns) * np.sqrt(freq)
+    # Supprimer les valeurs nulles initiales
+    portfolio = portfolio[portfolio > 0]
 
-def sharpe_ratio(returns: np.ndarray, freq: int = 252, risk_free_rate: float = 0.0) -> float:
-    """
-    Sharpe ratio annualisé.
-    
-    risk_free_rate : taux sans risque annualisé (0 par défaut)
-    """
-    excess_returns = returns - risk_free_rate / freq
-    return np.mean(excess_returns) / np.std(excess_returns) * np.sqrt(freq)
+    if portfolio.empty:
+        return np.nan
+
+    cum_max = portfolio.cummax()
+    drawdown = (portfolio / cum_max) - 1
+
+    return drawdown.min() * 100  # en % 
+
+def CAGR(data: pd.DataFrame) -> float:
+    portfolio = data["Portefeuille"].dropna()
+    portfolio = portfolio[portfolio > 0]
+    if portfolio.empty:
+        return np.nan
+    start_date = portfolio.index[0]
+    end_date = portfolio.index[-1]
+
+    T = (end_date - start_date).days / 365.25
+
+    if T <= 0:
+        return np.nan
+
+    V_i = portfolio.iloc[0]
+    V_f = portfolio.iloc[-1]
+
+    if V_i <= 0:
+        return np.nan
+
+    return (V_f / V_i) ** (1 / T) - 1
+
+def sharpe(data: pd.DataFrame, rf: float, periods: int = 252) -> float:
+    returns=data["Return"]
+    rf_period = rf / periods
+
+    mean = returns.mean()-rf_period
+    vol = returns.std()
+
+    if vol == 0:
+        return np.nan
+
+    return (mean / vol) * np.sqrt(periods)
+
+
+def vol_annual(data: pd.DataFrame, periods: int = 252) -> float:
+    returns = data["Return"]
+    return returns.std() * np.sqrt(periods)
+
