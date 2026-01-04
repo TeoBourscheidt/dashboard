@@ -24,6 +24,7 @@ def run_momentum(data: pd.DataFrame, start : str, capital :float = 1000, window:
                     cash=0 
                 suivi_capital.append(size_position*data.loc[data.index[i]])
                 
+                
             else :
                 if buy:
                     buy=False

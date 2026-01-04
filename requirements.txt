@@ -5,4 +5,5 @@ streamlit
 scikit-learn
 statsmodels
 plotly
+pmdarima
 streamlit-autorefresh

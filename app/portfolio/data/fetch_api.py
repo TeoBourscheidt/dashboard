@@ -1,6 +1,17 @@
 import yfinance as yf
+from typing import Annotated
+import pandas as pd
 
-def fetch_prices(assets):
-    df = yf.download(assets, period="6mo", interval="1h")["Close"]
-    df = df.rename_axis("timestamp").reset_index()
-    return df.set_index("timestamp")
+def clean_data(data : pd.DataFrame)->pd.DataFrame:
+    data = data.droplevel("Ticker", axis=1)
+    return data["Close"]
+
+def fetch_data_bis(list_ticket : list,start:Annotated[str, "YYYY-MM-DD"],end:Annotated[str, "YYYY-MM-DD"]) -> pd.DataFrame:
+    save=pd.DataFrame()
+    for ticket in list_ticket:
+        data = yf.download(ticket, start, end)
+        if data.empty:
+            raise ValueError(f"Aucune donnée trouvée pour {ticket}.")
+        save[ticket]=clean_data(data)
+    return save
+

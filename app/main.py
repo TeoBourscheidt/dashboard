@@ -22,4 +22,5 @@ if page == "Single Asset":
 # -----------------------------
 else:
     st.title("Portfolio Analysis")
-    st.write("Module Portfolio - En développement")
+    from portfolio.ui_portfolio import portfolio_page
+    portfolio_page()
