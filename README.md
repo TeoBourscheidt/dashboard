@@ -41,6 +41,9 @@ The platform is developed in Python and deployed on a Linux VM. The project work
 - `README.md` — this file.
 
 ---
+## Web Interface
+
+To access : https://dashboard-projet-cours-if.streamlit.app/
 
 ## Installation
 
@@ -49,4 +52,3 @@ The platform is developed in Python and deployed on a Linux VM. The project work
 git clone https://github.com/TeoBourscheidt/dashboard.git
 cd finance-dashboard
 
-Accès : http://localhost:8501/
