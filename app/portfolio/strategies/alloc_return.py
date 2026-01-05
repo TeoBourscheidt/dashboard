@@ -2,24 +2,6 @@ import pandas as pd
 import numpy as np
 
 def rebalancing_proportional_returns(data: pd.DataFrame, capital: float, freq: int, lookback: int = 30) -> pd.Series:
-    """
-    Rebalancing avec poids recalculés tous les X jours en fonction des rendements passés.
-    
-    Args:
-        data: DataFrame des prix (index = dates, colonnes = actifs)
-        capital: capital initial
-        freq: fréquence de rebalancing (en nombre de jours)
-        lookback: période de lookback pour calculer les rendements moyens (défaut 30 jours)
-    
-    Returns:
-        Series: Valeur du portefeuille dans le temps
-    
-    Algorithme:
-        Tous les X jours:
-        1. Calculer les rendements moyens sur les Y derniers jours (lookback)
-        2. Calculer nouveaux poids = Rendement[i] / Somme(Rendements)
-        3. Réallouer le capital selon ces nouveaux poids
-    """
     selected_assets = data.columns
     n_assets = len(selected_assets)
     
@@ -28,7 +10,6 @@ def rebalancing_proportional_returns(data: pd.DataFrame, capital: float, freq: i
     current_value = capital
     
     for i in range(len(data)):
-        # Rebalancing si fréquence atteinte ou première date
         if i % freq == 0:
             # Calculer les poids en fonction des rendements passés
             if i < lookback:
